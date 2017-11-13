@@ -61,6 +61,8 @@ public class userWindow extends javax.swing.JFrame {
         newsFeed.setModel(user.getNewsModel());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+         setTitle("Hello "+user.getID());
+        setResizable(false);
 
         userid.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         userid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -158,13 +160,13 @@ public class userWindow extends javax.swing.JFrame {
     }
     
      private void postTweetActionPerformed(ActionEvent evt) {
-        String tweet = tweetMessage.getText();
-        user.postTweet(tweet);
+        String tweet = tweetMessage.getText().trim();
+        this.user.postTweet(tweet);
     }
 
     private void attach(SocialUser foundUser) {
         if(followingCheck(foundUser)){
-            user.attach(foundUser);
+            user.setSubject(foundUser);
             foundUser.attach(user);
             updateList(foundUser);
         }
@@ -187,7 +189,7 @@ public class userWindow extends javax.swing.JFrame {
     }
 
     private void updateList(SocialUser user) {
-       following.addElement("-"+user.getID());
+       following.addElement("- "+user.getID());
        //followingList.setModel(following);
     }
 
@@ -195,7 +197,7 @@ public class userWindow extends javax.swing.JFrame {
         following.addElement("Users you are following: ");
         ArrayList<SocialUser> followingUserList = user.getFollowers();
         for(SocialUser users : followingUserList){
-            following.addElement("-"+users.getID());
+            following.addElement("- "+users.getID());
         }
         followingList.setModel(following);
     }

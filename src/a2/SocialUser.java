@@ -51,9 +51,10 @@ public class SocialUser extends User implements Observer, Subject {
 
     @Override
     public void update(Subject subject) {
-        String updates = getUpdate(this);
+        String updates = subject.getUpdate(this);
         String tweetUpdate = "- "+subject.toString()+": "+updates;
         newsList.addElement(tweetUpdate);
+        
     }
 
     @Override
@@ -99,7 +100,7 @@ public class SocialUser extends User implements Observer, Subject {
     }
     
     public DefaultListModel getNewsModel(){
-        return newsList;
+        return this.newsList;
     }
     
 }
