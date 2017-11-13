@@ -6,12 +6,13 @@
 package a2;
 
 import java.util.*;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author josue
  */
-public class tweeter extends User implements Observer, Subject {
+public class SocialUser extends User implements Observer, Subject {
     
     private String tweeterID;
     
@@ -23,10 +24,13 @@ public class tweeter extends User implements Observer, Subject {
     //List of people user is following
     private List<Subject> followedList = new ArrayList<Subject>();
     //list of news to send out
-    private List<String> newsList = new ArrayList<String>();
+    //will automatically sent due to the type being dfm
+    private DefaultListModel newsList = new DefaultListModel();
+  
     
-    public tweeter(String id){
+    public SocialUser(String id){
         setID(id);
+        newsList.addElement("Tweet Feed:");
         this.allowsChildren=false;
     }
 
@@ -49,7 +53,7 @@ public class tweeter extends User implements Observer, Subject {
     public void update(Subject subject) {
         String updates = getUpdate(this);
         String tweetUpdate = "- "+subject.toString()+": "+updates;
-        this.newsList.add(tweetUpdate);
+        newsList.addElement(tweetUpdate);
     }
 
     @Override
@@ -69,17 +73,33 @@ public class tweeter extends User implements Observer, Subject {
 
     @Override
     public void notifyObservers() {
-        
-       
+        for(Object user : followerList){
+            ((Observer) user).update(this);
+        }
     }
+    
 
     @Override
     public String getUpdate(Observer obs) {
        return this.message;
     }
     
+    public void postTweet(String tweet){
+        this.message = tweet;
+        newsList.addElement("-"+this.getID()+": "+tweet);
+        notifyObservers();
+    }
+    
     public Object[] getMessages(){
         return this.newsList.toArray();
+    }
+    
+    public ArrayList getFollowers(){
+        return (ArrayList) followedList;
+    }
+    
+    public DefaultListModel getNewsModel(){
+        return newsList;
     }
     
 }

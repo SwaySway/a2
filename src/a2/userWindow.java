@@ -5,6 +5,10 @@
  */
 package a2;
 
+import java.awt.event.*;
+import java.util.ArrayList;
+import javax.swing.*;
+
 /**
  *
  * @author josue
@@ -14,8 +18,27 @@ public class userWindow extends javax.swing.JFrame {
     /**
      * Creates new form userWindow
      */
-    public userWindow() {
+    // Variables declaration//
+    private javax.swing.JButton followUser;
+    private javax.swing.JList<String> followingList;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> newsFeed;
+    private javax.swing.JButton postTweet;
+    private javax.swing.JTextField tweetMessage;
+    private javax.swing.JTextField userid;
+    private TreeHandler datatree;
+    private SocialUser user;
+    private messageBox message = new messageBox();
+    private DefaultListModel following = new DefaultListModel();
+    
+    public userWindow(TreeHandler datatree, SocialUser user){
+        this.datatree = datatree;
+        this.user = user;
         initComponents();
+        showFollowing();
+        this.setVisible(true);
+        
     }
 
     /**
@@ -27,7 +50,7 @@ public class userWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        userid = new javax.swing.JLabel();
+        userid = new javax.swing.JTextField();
         followUser = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         followingList = new javax.swing.JList<>();
@@ -35,33 +58,46 @@ public class userWindow extends javax.swing.JFrame {
         postTweet = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         newsFeed = new javax.swing.JList<>();
+        newsFeed.setModel(user.getNewsModel());
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         userid.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         userid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         userid.setText("User ID");
-
-        followUser.setText("Follow User");
-
-        followingList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        userid.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                userid.setText("");
+            }
         });
+        
+        followUser.setText("Follow User");
+        followUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                followUserActionPerformed(evt);
+            }
+        });
+
         jScrollPane1.setViewportView(followingList);
 
         tweetMessage.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tweetMessage.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         tweetMessage.setText("Tweet Message");
+        tweetMessage.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                tweetMessage.setText("");
+            }
+        });
 
         postTweet.setText("Post Tweet");
-
-        newsFeed.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        postTweet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postTweetActionPerformed(evt);
+            }
         });
+
         jScrollPane2.setViewportView(newsFeed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -102,51 +138,66 @@ public class userWindow extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(userWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(userWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(userWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(userWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    }// </editor-fold> 
+    
+    private void followUserActionPerformed(ActionEvent evt) {
+        String findUserID = userid.getText().trim();
+        if(findUserID.equals("User ID") || findUserID.equals("")){
+            return;
+            //essentially do nothing
+            //does this so it dosen't waste time with next if
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new userWindow().setVisible(true);
-            }
-        });
+        if(datatree.contains(findUserID)){
+            SocialUser foundUser = (SocialUser) datatree.getUser(findUserID);
+            attach(foundUser);
+            
+        }else{
+            message.alert("User Not Found!");
+        }
+        
+    }
+    
+     private void postTweetActionPerformed(ActionEvent evt) {
+        String tweet = tweetMessage.getText();
+        user.postTweet(tweet);
     }
 
-    // Variables declaration - do not modify//
-    private javax.swing.JButton followUser;
-    private javax.swing.JList<String> followingList;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<String> newsFeed;
-    private javax.swing.JButton postTweet;
-    private javax.swing.JTextField tweetMessage;
-    private javax.swing.JLabel userid;
+    private void attach(SocialUser foundUser) {
+        if(followingCheck(foundUser)){
+            user.attach(foundUser);
+            foundUser.attach(user);
+            updateList(foundUser);
+        }
+        else{
+            return;
+        }
 }
-    // End of variables declaration
+
+    private boolean followingCheck(User foundUser) {
+        ArrayList followers = user.getFollowers();
+        if(followers.contains(foundUser)){
+            message.alert("Already following this user!");
+            return false;
+        }
+        if(foundUser.getID().equals(user.getID())){
+            message.alert("You cannot follow yourself!");
+            return false;
+        }
+        return true;
+    }
+
+    private void updateList(SocialUser user) {
+       following.addElement("-"+user.getID());
+       //followingList.setModel(following);
+    }
+
+    private void showFollowing() {
+        following.addElement("Users you are following: ");
+        ArrayList<SocialUser> followingUserList = user.getFollowers();
+        for(SocialUser users : followingUserList){
+            following.addElement("-"+users.getID());
+        }
+        followingList.setModel(following);
+    }
+}
+   

@@ -15,13 +15,14 @@ import javax.swing.tree.TreePath;
  *
  * @author josue
  */
-public class Admin extends javax.swing.JFrame {
+public class AdminWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form Admin
      */
-    public Admin() {
+    public AdminWindow() {
         initComponents();
+        this.setVisible(true);
     }
 
     /**
@@ -191,25 +192,40 @@ public class Admin extends javax.swing.JFrame {
 
     private void groupTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupTotalActionPerformed
         // TODO add your handling code here:
+        Visitor grptotal = new GroupTotal();
+        datatree.visiting(grptotal);
+        String total_number = String.valueOf(((GroupTotal)grptotal).getTotal());
+        alertMsg.inform("Total Amount of Groups: "+total_number);
     }//GEN-LAST:event_groupTotalActionPerformed
 
     private void userTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userTotalActionPerformed
-        // TODO add your handling code here:
+       Visitor usertotal = new UserTotal();
+       datatree.visiting(usertotal);
+       String total_number = String.valueOf(((UserTotal)usertotal).getTotal());
+       alertMsg.inform("Total Amount of Users: "+total_number);
         
     }//GEN-LAST:event_userTotalActionPerformed
 
     private void messagesTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagesTotalActionPerformed
         // TODO add your handling code here:
+        Visitor msgtotal = new MessageTotal();
+        datatree.visiting(msgtotal);
+        String total_number = String.valueOf(((MessageTotal)msgtotal).getTotal());
+        alertMsg.inform("Total Amount of Messages Overall: "+total_number);
     }//GEN-LAST:event_messagesTotalActionPerformed
 
     private void positivePercentageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positivePercentageActionPerformed
         // TODO add your handling code here:
+        Visitor positivepercentage = new PositivePercentage();
+        datatree.visiting(positivepercentage);
+        String total_number = String.valueOf(((PositivePercentage)positivepercentage).getTotal());
+        alertMsg.inform("Total Percent of Positive Messages: "+ total_number+"%");
     }//GEN-LAST:event_positivePercentageActionPerformed
 
     private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
         // TODO add your handling code here: 
        String newID = userID.getText().trim();
-       User newUser = new tweeter(newID);
+       User newUser = new SocialUser(newID);
        User selected = getSelectedUser(tree);
        if(newID.equals("UserID") || newID.equals("")){
            return;
@@ -234,10 +250,10 @@ public class Admin extends javax.swing.JFrame {
     private void userViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userViewActionPerformed
         // TODO add your handling code here:
           User node = getSelectedUser(this.tree);
-        if(!(node instanceof tweeter)){
+        if(!(node instanceof SocialUser)){
             alertMsg.alert("Cannot User View a Group! Select User!");
         }else{
-            openUserView(this.tree, getSelectedUser(this.tree));
+            new userWindow(datatree, (SocialUser) getSelectedUser(this.tree));
             
         }
         
@@ -253,44 +269,14 @@ public class Admin extends javax.swing.JFrame {
 		}
 		return selectedNode;	
 	}
-      private void openUserView(JTree tree, User selectedNode) {
-        
-    }
+      
    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Admin().setVisible(true);
-            }
-        });
+    //singleton pattern
+    public static AdminWindow getInstance(){
+       if(instance == null){
+           instance = new AdminWindow();
+       }
+        return instance;
     }
 
     // Variables declaration - do not modify
@@ -307,6 +293,7 @@ public class Admin extends javax.swing.JFrame {
     private JButton userView;
     private TreeHandler datatree;
     private messageBox alertMsg = new messageBox();
+    private static AdminWindow instance;
     // End of variables declaration                   
 
   

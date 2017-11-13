@@ -5,6 +5,7 @@
  */
 package a2;
 
+import java.util.ArrayList;
 import javax.swing.tree.*;
 
 /**
@@ -19,5 +20,5 @@ public abstract class User extends DefaultMutableTreeNode{
     
     @Override
     public abstract String toString();
-    
+
 }

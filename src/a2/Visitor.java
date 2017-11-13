@@ -9,8 +9,10 @@ package a2;
  *
  * @author Josue Ruiz
  */
+//Visitor Pattern
 public interface Visitor {
     
-    public void visit(User node);
+    public void visit(User user);
+    
     
 }

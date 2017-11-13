@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
  */
 public class messageBox {
     //A simple class which uses Joption pane to create an alert message to the user
-    public void inform(String message, String title){
-        JOptionPane.showMessageDialog(null, message,"Message: "+title, JOptionPane.INFORMATION_MESSAGE);
+    public void inform(String message){
+        JOptionPane.showMessageDialog(null, message,"Information!", JOptionPane.INFORMATION_MESSAGE);
         
     }
     

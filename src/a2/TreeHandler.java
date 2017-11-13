@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultTreeModel;
  *
  * @author josue
  */
-public class TreeHandler implements Visitable, DataTree {
+public class TreeHandler implements DataTree {
     
     private Map<String, User> t_map;
     private DefaultTreeModel tree;
@@ -58,8 +58,7 @@ public class TreeHandler implements Visitable, DataTree {
         return this.tree;
     }
 
-    @Override
-    public void accept(Visitor visitor) {
+    public void visiting(Visitor visitor) {
         for(Map.Entry<String,User> current:t_map.entrySet()){
             visitor.visit(current.getValue());
         }
