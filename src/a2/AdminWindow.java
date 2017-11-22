@@ -5,6 +5,7 @@
  */
 package a2;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -26,6 +27,8 @@ public class AdminWindow extends javax.swing.JFrame {
     private JScrollPane jScrollPane2;
     private JButton messagesTotal;
     private JButton positivePercentage;
+    private JButton lastUpdatedUser;
+    private JButton verification;
     private JTextField userID;
     private JButton userTotal;
     private JButton userView;
@@ -63,6 +66,8 @@ public class AdminWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tree = new JTree(datatree.getModel());
         addUser = new javax.swing.JButton();
+        lastUpdatedUser = new javax.swing.JButton();
+        verification = new javax.swing.JButton();
         
        
       
@@ -103,6 +108,20 @@ public class AdminWindow extends javax.swing.JFrame {
                 userViewActionPerformed(evt);
             }
         });
+        
+        lastUpdatedUser.setText("User with last Update");
+        lastUpdatedUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lastUpdatedUserActionPerformed(evt);
+            }
+        });
+        
+        verification.setText("User/Group Verfication");
+        verification.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verificationUserActionPerformed(evt);
+            }
+        });
 
         userTotal.setText("Show User \nTotal");
         userTotal.addActionListener(new java.awt.event.ActionListener() {
@@ -117,6 +136,7 @@ public class AdminWindow extends javax.swing.JFrame {
                 groupTotalActionPerformed(evt);
             }
         });
+   
 
         messagesTotal.setText("Show Messages Total");
         messagesTotal.addActionListener(new java.awt.event.ActionListener() {
@@ -241,6 +261,7 @@ public class AdminWindow extends javax.swing.JFrame {
     private void addUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserActionPerformed
         // TODO add your handling code here: 
        String newID = userID.getText().trim();
+       newID = newID.replaceAll("\\s+","");
        User newUser = new SocialUser(newID);
        User selected = getSelectedUser(tree);
        if(newID.equals("UserID") || newID.equals("")){
@@ -253,6 +274,7 @@ public class AdminWindow extends javax.swing.JFrame {
     
     private void addGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addGroupActionPerformed
        String newID = groupID.getText().trim();
+       newID = newID.replaceAll("\\s+","");
        User newGroup = new Group(newID);
        User selected = getSelectedUser(tree);
        if(newID.equals("GroupID") || newID.equals("")){
@@ -274,6 +296,18 @@ public class AdminWindow extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_userViewActionPerformed
+
+    private void lastUpdatedUserActionPerformed(ActionEvent evt) {
+        Visitor latestupdate = new LatestUpdate();
+        datatree.visiting(latestupdate);
+        String userid = ((LatestUpdate)latestupdate).userwithLatestUpdate();
+        alertMsg.inform("User with the last update is "+userid);
+    }
+    private void verificationUserActionPerformed(ActionEvent evt) {
+        Visitor verified = new Verification();
+        datatree.visiting(verified);
+        String response = ((Verification)verified).verdict();
+    }
     
     public User getSelectedUser(JTree tree){
 		TreePath parentPath = tree.getSelectionPath(); 

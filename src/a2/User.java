@@ -17,6 +17,8 @@ public abstract class User extends DefaultMutableTreeNode{
     public abstract void setID (String ID);
     
     public abstract String getID();
+   
+    public abstract String getCreationTimeStamp();
     
     @Override
     public abstract String toString();

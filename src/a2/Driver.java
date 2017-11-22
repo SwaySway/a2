@@ -10,8 +10,10 @@ package a2;
  * @author josue
  */
 public class Driver {
+    
     public static void main(String[] args){
         //Singleton
         AdminWindow.getInstance();
+        
     }
 }

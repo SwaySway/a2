@@ -13,7 +13,10 @@ public class Group extends User {
 
     private String id;
     
+    private String creationTimeStamp;
+    
     public Group(String ID){
+        creationTimeStamp = new DateFormatter().getCurrentTimeStamp();
         setID(ID);
     }
     
@@ -30,6 +33,11 @@ public class Group extends User {
     @Override
     public String toString() {
         return this.getID();
+    }
+
+    @Override
+    public String getCreationTimeStamp() {
+        return creationTimeStamp;
     }
    
 }

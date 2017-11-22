@@ -6,7 +6,7 @@
 package a2;
 
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import javax.swing.*;
 
 /**
@@ -27,14 +27,22 @@ public class userWindow extends javax.swing.JFrame {
     private javax.swing.JButton postTweet;
     private javax.swing.JTextField tweetMessage;
     private javax.swing.JTextField userid;
+    private javax.swing.JLabel creationTime;
+    private String creationTimeStamp;
+    private String lastUpdatedTimeStamp;
+    private javax.swing.JLabel lastUpdated;
     private TreeHandler datatree;
     private SocialUser user;
     private messageBox message = new messageBox();
     private DefaultListModel following = new DefaultListModel();
     
+    
+    
     public userWindow(TreeHandler datatree, SocialUser user){
+        creationTimeStamp = user.getCreationTimeStamp();
         this.datatree = datatree;
         this.user = user;
+        user.setPanel(this);
         initComponents();
         showFollowing();
         this.setVisible(true);
@@ -59,11 +67,14 @@ public class userWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         newsFeed = new javax.swing.JList<>();
         newsFeed.setModel(user.getNewsModel());
+        creationTime = new JLabel();
+        lastUpdated = new JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
          setTitle("Hello "+user.getID());
         setResizable(false);
-
+        creationTime.setText("Created: "+creationTimeStamp);
+        lastUpdated.setText("Last Udpated: "+user.getlastUpdate());
         userid.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         userid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         userid.setText("User ID");
@@ -106,6 +117,12 @@ public class userWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(creationTime)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                .addComponent(lastUpdated)
+                .addGap(144, 144, 144))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -123,6 +140,12 @@ public class userWindow extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(272, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(creationTime)
+                    .addComponent(lastUpdated))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -144,6 +167,7 @@ public class userWindow extends javax.swing.JFrame {
     
     private void followUserActionPerformed(ActionEvent evt) {
         String findUserID = userid.getText().trim();
+        findUserID = findUserID.replaceAll("\\s+","");
         if(findUserID.equals("User ID") || findUserID.equals("")){
             return;
             //essentially do nothing
@@ -187,6 +211,11 @@ public class userWindow extends javax.swing.JFrame {
         }
         return true;
     }
+    
+    public void lastUpdateLabel(String updateTimeStamp){
+        this.lastUpdatedTimeStamp = updateTimeStamp;
+        lastUpdated.setText("Last Updated: "+ lastUpdatedTimeStamp);
+    }
 
     private void updateList(SocialUser user) {
        following.addElement("- "+user.getID());
@@ -201,5 +230,7 @@ public class userWindow extends javax.swing.JFrame {
         }
         followingList.setModel(following);
     }
+    
+   
 }
    

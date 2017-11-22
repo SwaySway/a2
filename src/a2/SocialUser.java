@@ -18,6 +18,12 @@ public class SocialUser extends User implements Observer, Subject {
     
     private String message;
     
+    private String timeStampCreation;
+    
+    private String lastUpdate = "";
+    
+    private userWindow userwindow;
+    
     //List of followers
     private List<Observer> followerList = new ArrayList<Observer>();
     
@@ -29,6 +35,7 @@ public class SocialUser extends User implements Observer, Subject {
   
     
     public SocialUser(String id){
+        timeStampCreation = new DateFormatter().getCurrentTimeStamp();
         setID(id);
         newsList.addElement("Tweet Feed:");
         this.allowsChildren=false;
@@ -54,14 +61,22 @@ public class SocialUser extends User implements Observer, Subject {
         String updates = subject.getUpdate(this);
         String tweetUpdate = "- "+subject.toString()+": "+updates;
         newsList.addElement(tweetUpdate);
-        
     }
 
     @Override
     public void setSubject(Subject subject) {
         followedList.add(subject);
     }
-
+    
+    public void updateTimeStamp(){
+        this.lastUpdate = new DateFormatter().getCurrentTimeStamp();
+        userwindow.lastUpdateLabel(lastUpdate);
+    }
+    
+    public String getlastUpdate(){
+        return lastUpdate;
+    }
+    
     @Override
     public void attach(Observer obs) {
         followerList.add(obs);
@@ -76,6 +91,7 @@ public class SocialUser extends User implements Observer, Subject {
     public void notifyObservers() {
         for(Object user : followerList){
             ((Observer) user).update(this);
+            ((SocialUser) user).updateTimeStamp();
         }
     }
     
@@ -87,6 +103,7 @@ public class SocialUser extends User implements Observer, Subject {
     
     public void postTweet(String tweet){
         this.message = tweet;
+        this.updateTimeStamp();
         newsList.addElement("-"+this.getID()+": "+tweet);
         notifyObservers();
     }
@@ -101,6 +118,15 @@ public class SocialUser extends User implements Observer, Subject {
     
     public DefaultListModel getNewsModel(){
         return this.newsList;
+    }
+
+    @Override
+    public String getCreationTimeStamp() {
+        return timeStampCreation;
+    }
+
+    void setPanel(userWindow userwindow) {
+        this.userwindow = userwindow;
     }
     
 }
