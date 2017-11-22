@@ -3,5 +3,5 @@
 
 ## v1.0 assignment 2
  * Can add users and interact with them (follow, tweet, etc..)
-## 1.1 assignment 3
+## v1.1 assignment 3
   * Added stats to check for user/group verification and timestamps
