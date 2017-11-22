@@ -5,7 +5,10 @@
  */
 package a2;
 
+import java.text.ParseException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
@@ -68,8 +71,9 @@ public class SocialUser extends User implements Observer, Subject {
         followedList.add(subject);
     }
     
-    public void updateTimeStamp(){
-        this.lastUpdate = new DateFormatter().getCurrentTimeStamp();
+    public void updateTimeStamp() {
+        DateFormatter temp = new DateFormatter();
+        this.lastUpdate = temp.getCurrentTimeStamp();
         userwindow.lastUpdateLabel(lastUpdate);
     }
     

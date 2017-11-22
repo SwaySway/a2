@@ -17,8 +17,10 @@ import java.util.logging.Logger;
 public class LatestUpdate implements Visitor {
     private Date currentTimeStamp;
     private Date newTimeStamp;
-    private DateFormatter gts;
     private String userid;
+    private messageBox alertMsg = new messageBox();
+    private DateFormatter gts = new DateFormatter();
+   
     
     @Override
     public void visit(User user) {
@@ -26,9 +28,13 @@ public class LatestUpdate implements Visitor {
        {
             if(user instanceof SocialUser){
                 if(currentTimeStamp == null){
-                    currentTimeStamp = gts.getDateFormat(((SocialUser) user).getlastUpdate());
+                    String temp = ((SocialUser) user).getlastUpdate();
+                    if(temp.equals("")){
+                        alertMsg.alert("No Updated Message!");
+                        return;
+                    }
+                    currentTimeStamp = gts.getDateFormat(temp);
                     userid = user.getID();
-                    return;
                 }else{
                     String newtimestampStr = ((SocialUser) user).getlastUpdate();
                     newTimeStamp = gts.getDateFormat(newtimestampStr);
@@ -44,7 +50,7 @@ public class LatestUpdate implements Visitor {
     }
     
     public String userwithLatestUpdate(){
-        return userid;
+       return userid;
     }
     
 }
